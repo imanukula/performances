@@ -1,32 +1,80 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, FlatList, Text, View, TouchableOpacity } from 'react-native';
 
-import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from '../components/Themed';
+const Item = ({ data, onPress }) => (
+  <TouchableOpacity onPress={onPress} style={[styles.item]}>
+    <Text style={styles.itemText}>{data.day}</Text>
+    <Text style={styles.trainingText}> Entraintement : {data.training}</Text>
+  </TouchableOpacity>
+);
 
 export default function TabOneScreen() {
+
+  const [selected, setSelected] = React.useState(null)
+
+  const days = [{
+    day: "Lundi",
+    training: "Push"
+  }, {
+    day: "Mardi",
+    training: "Pull"
+  }, {
+    day: "Mercredi",
+    training: "Leg"
+  }, {
+    day: "Jeudi",
+    training: "Push"
+  }, {
+    day: "Vendredi",
+    training: "Pull"
+  }, {
+    day: "Samedi",
+    training: "Leg"
+  }, {
+    day: "Dimanche",
+    training: ""
+  }
+  ]
+
+  const renderItem = (item) => {
+    return (
+      <View style={styles.item}>
+        <Item
+          data={item}
+          onPress={() => setSelected(item.day)}
+        />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="/screens/TabOneScreen.tsx" />
+      <FlatList
+        data={days}
+        renderItem={({ item }) => renderItem(item)}
+        keyExtractor={(item) => item.day}
+        extraData={selected}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
+    flex: 1
+  },
+  item: {
+    height: 60,
+    marginStart: 20,
     justifyContent: 'center',
   },
-  title: {
-    fontSize: 20,
+  itemText: {
+    fontSize: 22,
     fontWeight: 'bold',
+    color: "white",
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
+  trainingText: {
+    fontSize: 14,
+    color: "white",
+  }
 });
